@@ -362,70 +362,42 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiCategoryCategory extends Schema.CollectionType {
-  collectionName: 'categories';
+export interface ApiProductProduct extends Schema.CollectionType {
+  collectionName: 'products';
   info: {
-    singularName: 'category';
-    pluralName: 'categories';
-    displayName: 'Category';
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'Products';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    Name: Attribute.String;
-    restaurants: Attribute.Relation<
-      'api::category.category',
-      'manyToMany',
-      'api::restaurant.restaurant'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiRestaurantRestaurant extends Schema.CollectionType {
-  collectionName: 'restaurants';
-  info: {
-    singularName: 'restaurant';
-    pluralName: 'restaurants';
-    displayName: 'Restaurant';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    Name: Attribute.String;
+    Name: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 3;
+        maxLength: 50;
+      }>;
     Description: Attribute.RichText;
-    categories: Attribute.Relation<
-      'api::restaurant.restaurant',
-      'manyToMany',
-      'api::category.category'
-    >;
+    image: Attribute.Media;
+    availableQty: Attribute.Integer &
+      Attribute.Required &
+      Attribute.DefaultTo<0>;
+    createdDate: Attribute.Date & Attribute.Required;
+    productId: Attribute.UID & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::restaurant.restaurant',
+      'api::product.product',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::restaurant.restaurant',
+      'api::product.product',
       'oneToOne',
       'admin::user'
     > &
@@ -869,8 +841,7 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::category.category': ApiCategoryCategory;
-      'api::restaurant.restaurant': ApiRestaurantRestaurant;
+      'api::product.product': ApiProductProduct;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
